@@ -8,6 +8,13 @@ ebin
 log
 Mnesia*
 *.dump
-
 rel/openpoker/
 rel/log/
+*.iml
+.idea
+.idea/*
+_build
+_build/*
+rebar.lock
+
+

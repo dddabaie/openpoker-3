@@ -53,7 +53,7 @@ handle_data(Code, LoopData) when is_list(Code) ->
 %%%% 
 
 handle_protocol(R = #cmd_login{}, LoopData = #pdata{connection_timer =T}) when T /= ?UNDEF ->
-  catch erlang:cancel_connection_timer(T),
+%%  catch erlang:cancel_connection_timer(T),
   handle_protocol(R, LoopData#pdata{connection_timer = ?UNDEF});
 
 handle_protocol(#cmd_login{identity = Identity, password = Password}, LoopData) ->

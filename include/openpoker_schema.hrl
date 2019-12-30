@@ -16,7 +16,7 @@
   }).
 
 -record(tab_turnover_log, {
-    id = now(),
+    id = erlang:timestamp(),
     pid,      %% pid
     game,     %% {gid, sn}
     amt,      %% amt
@@ -27,7 +27,7 @@
   }).
 
 -record(tab_buyin_log, {
-    id = now(), 
+    id = erlang:timestamp(),
     pid,      %% pid
     gid,      %% gid
     amt,      %% amt

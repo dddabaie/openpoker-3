@@ -44,7 +44,7 @@ make_deck() ->
     [?POKER_ENCODE(Suit, Face) || Face <- L1, Suit <- L2].
 
 shuffle(Cards) ->
-  random:seed(now()),
+  random:seed(erlang:timestamp()),
   Temp = lists:map(fun(X) -> {random:uniform(), X} end, Cards),
   Temp1 = lists:keysort(1, Temp),
   lists:map(fun(X) -> element(2, X) end, Temp1).

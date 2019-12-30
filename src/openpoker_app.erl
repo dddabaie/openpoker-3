@@ -20,7 +20,7 @@ start(_StartType, _StartArgs) ->
     _ ->
       ok
   end,
-
+  io:format(">>>>>>>>>>>>>>>>>>>>>>>>>>~n"),
   op_sup:start_link().
 
 stop(_State) ->
