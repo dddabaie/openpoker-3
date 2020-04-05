@@ -52,7 +52,7 @@ head(Id) ->
       receive 
         R when is_tuple(R) -> R
       after
-        500 -> exit(request_timeout)
+        5000 -> exit(request_timeout)
       end
   end.
 

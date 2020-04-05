@@ -3,13 +3,17 @@
 -behaviour(application).
 
 %% Application callbacks
--export([start/2, stop/1]).
+-export([start/2, stop/1, start/0]).
 
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
-
 start(_StartType, _StartArgs) ->
+  application:start(sasl),
+  application:start(mochiweb),
+  application:start(webtekcos),
+  application:start(mnesia),
+  io:format("==========================~n"),
   case mnesia:system_info(tables) of
     [schema] ->
       io:format("==============================================~n"),
@@ -24,4 +28,10 @@ start(_StartType, _StartArgs) ->
   op_sup:start_link().
 
 stop(_State) ->
+  ok.
+
+
+start()->
+  io:format("~w~n", [good]),
+  logger:info("start......................"),
   ok.

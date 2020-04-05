@@ -1,13 +1,16 @@
 {application, openpoker,
  [
-  {description, ""},
+  {description, "openpoker server"},
   {vsn, "0.1.0"},
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib,
-                  sasl
-                 ]},
+                  stdlib
+%%                  sasl,
+%%                  mnesia,
+%%                  mochiweb,
+%%                  webtekcos
+  ]},
   {mod, { openpoker_app, []}},
-  {env, []}
+   {env, []}
  ]}.

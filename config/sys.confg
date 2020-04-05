@@ -1,0 +1,8 @@
+[
+    {mnesia,
+        [
+		% {mkdir, "mf_logs"},
+		{dir, "mnesia_db_data"}
+	    ]
+	}
+].
