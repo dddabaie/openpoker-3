@@ -4,7 +4,7 @@
 
 -include("openpoker.hrl").
 
-connect() -> 
+connect() ->
   console(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"),
   put(convert_id_to_process, true).
 

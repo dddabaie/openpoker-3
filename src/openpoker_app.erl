@@ -10,6 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
+  application:start(lager),
   case mnesia:system_info(tables) of
     [schema] ->
       io:format("==============================================~n"),
@@ -21,6 +22,8 @@ start(_StartType, _StartArgs) ->
       ok
   end,
   io:format(">>>>>>>>>>>>>>>>>>>>>>>>>>~n"),
+
+  server_box:start_game_server(),
   op_sup:start_link().
 
 stop(_State) ->

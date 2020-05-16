@@ -10,11 +10,12 @@
 %%%
 
 start([], Ctx = #texas{gid = Id, limit = Limit}) ->
+%%  大小盲注
   {SmallAmt, BigAmt} = {Limit#limit.small, Limit#limit.big},
-
+%%庄家
   Button = advance_button(Ctx),
   game:broadcast(#notify_button{ game = Id, b = Button#seat.sn }, Ctx),
-
+%%大小盲
   {Small, Big, Headsup} = advance_blinds(Button, Ctx),
   game:broadcast(#notify_sb{ game = Id, sb = Small#seat.sn }, Ctx),
   game:broadcast(#notify_bb{ game = Id, bb = Big#seat.sn }, Ctx),

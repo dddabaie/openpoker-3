@@ -7,7 +7,9 @@
                   kernel,
                   stdlib,
                   sasl,
-                    mnesia
+                    mnesia,
+                  cowboy,
+                  lager
                  ]},
   {mod, { openpoker_app, []}},
   {env, []}

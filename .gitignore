@@ -5,7 +5,7 @@ deps
 *.beam
 *.plt
 ebin
-log
+log*
 Mnesia*
 *.dump
 rel/openpoker/
