@@ -16,9 +16,9 @@ init(Req, Opts) ->
 websocket_init(State) ->
 	Pid = self(),
 	Timer = erlang:start_timer(?CONNECT_TIMEOUT, Pid, ?MODULE),
-	State#{connection_timer = Timer},
+	NewState = State#{connection_timer => Timer},
 	lager:info("My Pid is ~p ", [Pid]),
-	{ok, State, hibernate}.
+	{ok, NewState, hibernate}.
 
 websocket_handle({text, Msg}, State) ->
 	if
@@ -31,13 +31,13 @@ websocket_handle({text, Msg}, State) ->
 
 websocket_handle({binary, Msg}, State) ->
 	NewState = handle_data(Msg, State),
-	{ok, NewState};
+	{ok, NewState, hibernate};
 
 websocket_handle(_Data, State) ->
 	{ok, State, hibernate}.
 
 websocket_info({send, Resp}, State) ->
-	{reply, {binary, Resp}, State};
+	{reply, {binary, Resp}, State, hibernate};
 
 websocket_info({timeout, _Ref, Msg}, State) ->
 	erlang:start_timer(1000, self(), <<"How' you doin'?">>),
@@ -78,7 +78,8 @@ handle_data(Code, LoopData) when is_list(Code) ->
 handle_protocol(R = #cmd_login{}, #{connection_timer :=T }=LoopData) when T /= ?UNDEF ->
 %%  catch erlang:cancel_connection_timer(T),
 	catch erlang:cancel_timer(T),
-	handle_protocol(R, LoopData#{connection_timer = ?UNDEF});
+	NewLoopData = LoopData#{connection_timer := ?UNDEF},
+	handle_protocol(R, NewLoopData);
 
 handle_protocol(#cmd_login{identity = Identity, password = Password}, LoopData) ->
 	case player:auth(binary_to_list(Identity), binary_to_list(Password)) of
@@ -107,7 +108,7 @@ handle_protocol(#cmd_login{identity = Identity, password = Password}, LoopData) 
 			end
 	end;
 
-handle_protocol(#cmd_logout{}, #{player := Player, player_info := Info} = LoopData) when is_pid(Player) ->
+handle_protocol(#cmd_logout{}, #{player := Player, player_info := Info} = _LoopData) when is_pid(Player) ->
 	op_players_sup:terminate_child(Info#tab_player_info.pid),
 	close();
 
