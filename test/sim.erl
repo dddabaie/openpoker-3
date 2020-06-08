@@ -266,6 +266,7 @@ clean(_) ->
   error_logger:tty(false),
   ?assert(ok =:= application:stop(openpoker)).
 
+
 go_go_go() ->
   gen_server:cast(?GAME_NAME(?GAME), go_go_go).
 
