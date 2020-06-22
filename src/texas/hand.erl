@@ -262,12 +262,6 @@ make_rep([], Rep) ->
 make_mask([C, D, H, S]) ->
     C bor D bor H bor S.
 
-%%make_mask([{C, D, H, S}]) ->
-%%  C bor D bor H bor S;
-%%
-%%make_mask({C, D, H, S}) ->
-%%  C bor D bor H bor S.
-
 high_bit(Mask) ->
     1 bsl bits:log2(Mask).
 

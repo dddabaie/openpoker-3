@@ -9,7 +9,6 @@
 make_rep_test() ->
   ?assertEqual(
     hand:make_rep(hand:make_cards(" 2S 4D JH 5D 8C QD TD 7H AD")),
-
     %  AKQJT98765432A
     [2#00000010000000,   % CLUBS
      2#10101000011000,   % DIAMONDS
