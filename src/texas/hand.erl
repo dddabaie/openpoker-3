@@ -1,7 +1,7 @@
 -module(hand).
 
 -export([new/0, new/1, add/2, size/1, rank/1, merge/2]).
--export([make_card/1, make_cards/1, make_rep/1]).
+-export([make_card/1, make_cards/1, make_rep/1, make_mask/1]).
 -export([player_hand/1]).
 
 -include("openpoker.hrl").

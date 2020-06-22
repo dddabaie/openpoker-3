@@ -10,9 +10,7 @@
 -author("lunay").
 
 %% API
--export([start_game_server/0
-%%  ,start_gateway/0
-]).
+-export([start_game_server/0, stop/0]).
 
 start_game_server()->
   %% TCP Websocket
@@ -35,3 +33,9 @@ start_game_server()->
 
   {ok, _} = ranch:start_listener(tcp_reverse,
     ranch_tcp, [{port, Server_Port}], reverse_protocol, []).
+
+%%关闭服务需要执行
+stop() ->
+  ok = cowboy:stop_listener(game_server_listener),
+  ok = ranch:stop_listener(tcp_reverse),
+  ok.

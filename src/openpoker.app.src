@@ -7,10 +7,13 @@
                   kernel,
                   stdlib,
                   sasl,
-                    mnesia,
-                  cowboy,
-                  lager
+                  mnesia
+%%                  cowboy,
+%%                  lager
                  ]},
-  {mod, { openpoker_app, []}},
-  {env, []}
+  {mod, { openpoker_app, [cowboy, lager]}},
+  {env, [
+      {websocket_port, 3009},
+      {server_port, 7777},
+      {gateway_port, 8080}]}
  ]}.
