@@ -101,7 +101,7 @@ player_hand(#hand{ rank = Rank, high1 = High }) ->
 %%%
 %%% CHECK RANK
 %%%
-
+%%　同花顺－五张同花色的连续数字牌
 is_straight_flush(Hand, Rep) ->
     Mask = make_mask(Rep),
     case is_flush(Hand, Mask, Rep, ?CS_CLUBS) of
@@ -117,6 +117,7 @@ is_straight_flush(Hand, Rep) ->
       end
     end.
 
+%% 同花－五张不按顺序但花色相同的扑克牌
 is_flush(Hand, Rep) ->
     Mask = make_mask(Rep),
     is_flush(Hand, Mask, Rep, ?CS_CLUBS).
@@ -135,6 +136,7 @@ is_flush(Hand, Mask, [H|T], Suit) ->
 is_flush(_, _, [], _) ->
     none.
 
+%% 顺子－五张连续数字扑克牌组成
 is_straight(Hand, Rep) ->
   Mask = make_mask(Rep),
   is_straight(Hand, Mask, Rep).
@@ -149,7 +151,8 @@ is_straight(Hand, Value, Mask) when Value band Mask =:= Mask ->
   Hand#hand{ rank = ?HC_STRAIGHT, high1 = Mask };
 is_straight(Hand, Value, Mask) ->
   is_straight(Hand, Value, Mask bsr 1).
-  
+
+%% 四条－4张是相同数字的扑克牌，第5张在剩余牌中挑选最大的一张牌。
 is_four_kind(Hand, [C, D, H, S]) when C band D band H band S > 0 ->
   V = C band D band H band S,
   Hand#hand{ 
@@ -159,6 +162,7 @@ is_four_kind(Hand, [C, D, H, S]) when C band D band H band S > 0 ->
 is_four_kind(_, _) ->
   none.
 
+%% 葫芦－三张相同数字及任何两张其他相同数字的扑克牌
 is_full_house(Hand, Rep) ->
   case is_three_kind(Hand, Rep) of
     none -> 
@@ -179,6 +183,7 @@ is_full_house(Hand, Rep) ->
       end
   end.
 
+%% 三条－三张相同数字和两张不同数字的扑克牌组成
 is_three_kind(Hand, [C, D, H, S]) ->
   LAND = [C band D band H,
           D band H band S,
@@ -196,6 +201,7 @@ is_three_kind(Hand, [H|_], Rep) when H > 0 ->
 is_three_kind(Hand, [_|T], Rep) ->
   is_three_kind(Hand, T, Rep).
 
+%% 两对－两对数字相同但两两不同的扑克和一张杂牌组成
 is_two_pair(Hand, Rep) ->
   case is_pair(Hand, Rep) of
     none ->
@@ -215,6 +221,7 @@ is_two_pair(Hand, Rep) ->
       end
   end.
 
+%% 一对－两张相同数字的扑克牌和另三张无法组成牌型的杂牌组成。
 is_pair(Hand, [C, D, H, S]) ->
   LAND = [C band D,
           D band H,
@@ -270,6 +277,7 @@ make_rep([H|T], Rep) ->
 make_rep([], Rep) ->
   tuple_to_list(Rep).
 
+%%　二进制或运算
 make_mask([C, D, H, S]) ->
     C bor D bor H bor S.
 
