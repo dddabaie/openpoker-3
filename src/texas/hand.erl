@@ -252,8 +252,19 @@ rank(Hand, [], Rep) ->
   High = bits:clear_extra_bits(Mask, 5),
   Hand#hand{ rank = ?HC_HIGH_CARD, high1 = High, score = 0 }.
 
-make_rep([H|T], Rep) when is_integer(H) -> 
+%%make_rep([H|T], Rep) when is_integer(H) ->
+%%  [Suit, Face] = ?POKER_DECODE(H),
+%%  A = element(Suit, Rep) bor (1 bsl (Face)),
+%%  io:format("~p~n", [A]),
+%%  io:format("~p~n", [T]),
+%%  make_rep(T, setelement(Suit, Rep, element(Suit, Rep) bor (1 bsl (Face))));
+
+%%必须去掉when is_integer(H)->才正确执行,可能是版本问题
+make_rep([H|T], Rep) ->
   [Suit, Face] = ?POKER_DECODE(H),
+  A = element(Suit, Rep) bor (1 bsl (Face)),
+  io:format("~p~n", [A]),
+  io:format("~p~n", [T]),
   make_rep(T, setelement(Suit, Rep, element(Suit, Rep) bor (1 bsl (Face))));
 
 make_rep([], Rep) ->
