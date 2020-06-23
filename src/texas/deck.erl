@@ -23,6 +23,7 @@ draw([H|T]) ->
 size(Cards) ->
   length(Cards).
 
+%%生成一副牌
 make_deck() ->
     L1 = [ ?CF_TWO, 
            ?CF_THREE, 
@@ -43,6 +44,7 @@ make_deck() ->
            ?CS_SPADES ],
     [?POKER_ENCODE(Suit, Face) || Face <- L1, Suit <- L2].
 
+%% 洗牌
 shuffle(Cards) ->
   random:seed(erlang:timestamp()),
   Temp = lists:map(fun(X) -> {random:uniform(), X} end, Cards),

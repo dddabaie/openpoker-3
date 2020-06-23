@@ -75,15 +75,15 @@
 
 %%% Hand combination
 
--define(HC_HIGH_CARD, 0).
--define(HC_PAIR, 1).
--define(HC_TWO_PAIR, 2).
--define(HC_THREE_KIND, 3).
--define(HC_STRAIGHT, 4).
--define(HC_FLUSH, 5).
--define(HC_FULL_HOUSE, 6).
--define(HC_FOUR_KIND, 7).
--define(HC_STRAIGHT_FLUSH, 8).
+-define(HC_HIGH_CARD, 0). %高牌
+-define(HC_PAIR, 1). %一对
+-define(HC_TWO_PAIR, 2).%两对
+-define(HC_THREE_KIND, 3).%三条
+-define(HC_STRAIGHT, 4).%顺子
+-define(HC_FLUSH, 5). %同花
+-define(HC_FULL_HOUSE, 6).%葫芦
+-define(HC_FOUR_KIND, 7).%四条
+-define(HC_STRAIGHT_FLUSH, 8).%同花顺
 
 -define(DEF_MOD, [
     {wait_players, []},
