@@ -10,15 +10,21 @@
 -include("openpoker.hrl").
 
 init(Req, Opts) ->
+	io:format("111111111111111~n", []),
 	State = #{connection_timer => ?UNDEF, player => ?UNDEF, player_info => ?UNDEF},
 	{cowboy_websocket, Req, State, Opts}.
 
 websocket_init(State) ->
+	io:format("222222222222222~n", []),
 	Pid = self(),
 	Timer = erlang:start_timer(?CONNECT_TIMEOUT, Pid, ?MODULE),
 	NewState = State#{connection_timer => Timer},
 	lager:info("My Pid is ~p ", [Pid]),
 	{ok, NewState, hibernate}.
+
+websocket_handle({text, <<"@stop">>}, State) ->
+	io:format("ssssssssssssssssstop~n", []),
+	{stop, State};
 
 websocket_handle({text, Msg}, State) ->
 	if

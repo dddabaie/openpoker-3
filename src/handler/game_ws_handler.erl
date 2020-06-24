@@ -8,27 +8,29 @@
     ]).
 
 init(Req, _) ->
+    io:format("111111111111111~n", []),
     State = #{ws_pid => none, logined => false, user_pid => none},
     {cowboy_websocket, Req, State}.
 
 websocket_init(State) ->
+    io:format("222222222222222~n", []),
     WsPid = self(),
-%%    game_debug:debug(info,"wwwwwww WsPid: ~p, websocket connected   wwwwwww ~n", [WsPid]),
+    io:format("wwwwwww WsPid: ~p, websocket connected   wwwwwww ~n", [WsPid]),
     NewState = State#{ws_pid := WsPid},
     {ok, NewState}.
 
 websocket_handle({text, <<"@heart">>}, #{ws_pid := WsPid} = State) ->
-%%    game_debug:debug(info,"wwwwwww WsPid: ~p, text recevie: ~p   wwwwwww ~n", [WsPid, <<"@heart">>]),
-    Resp = integer_to_binary(game_util:unixtime()),
+    io:format("wwwwwww WsPid: ~p, text recevie: ~p   wwwwwww ~n", [WsPid, <<"@heart">>]),
+    Resp = integer_to_binary(10000000),
     {reply, {text, Resp}, State};
 
 
 websocket_handle({text, <<"@stop">>}, #{ws_pid := WsPid} = State) ->
-%%    game_debug:debug(info,"wwwwwww @stop: ~p wwwwwwwWsPid: ~p ~n", [<<"@stop">>, WsPid]),
+    io:format("wwwwwww @stop: ~p wwwwwwwWsPid: ~p ~n", [<<"@stop">>, WsPid]),
     {stop, State};
 
 websocket_handle({text, Req}, #{ws_pid := WsPid} = State) ->
-%%    game_debug:debug(info,"wwwwwww WsPid: ~p, text recevie: ~p wwwwwww ~n", [WsPid, Req]),
+    io:format("wwwwwww WsPid: ~p, text recevie: ~p wwwwwww ~n", [WsPid, Req]),
     Resp = Req,
     {reply, {text, Resp}, State};
 
@@ -41,9 +43,9 @@ websocket_handle({binary, Req}, #{logined := IsLogined} = State) ->
             {ok, State};
         false ->
 %%            game_debug:debug(error, "xxxxxxxCmd: ~p~n", [Cmd]),
-            RecordData = pt_10_pb:decode_msg(Bin, pt_10000_c2s),
-            NewState = pp_account:handler(10000, RecordData, State),
-            {ok, NewState}
+%%            RecordData = pt_10_pb:decode_msg(Bin, pt_10000_c2s),
+%%            NewState = pp_account:handler(10000, RecordData, State),
+            {ok, State}
     end;
 
 websocket_handle(ping, State) ->

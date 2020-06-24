@@ -17,7 +17,7 @@ start_game_server()->
   GameServerDispatch = cowboy_router:compile([
     {'_', [
       {"/", cowboy_static, {priv_file, openpoker, "ws.html"}},
-      {"/ws", ws, []}
+      {"/ws", game_ws_handler, []}
     ]}
   ]),
 

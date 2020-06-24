@@ -9,17 +9,24 @@
 
 %%websocket 客户端测试
 wc()->
-  Pid = spawn(gun_ex,connection,[#{host => "127.0.0.1",port => 5555,path => "/ws"}]),
+  Pid = spawn(gun_ex,connection,[#{host => "127.0.0.1", port => 3009, path => "/ws"}]),
   Pid ! start,
   Pid.
 
 connection(State) ->
   receive
     start ->
+      io:format("--------------------------1111111111~n"),
       #{host := Host,port := Port} = State,
+      io:format("host: ~p port: ~p~n", [Host, Port]),
       %------- Connect To Host ----------
       {ok,WPID} = gun:open(Host,Port),
       io:format("Opening Gun: ~p~n",[WPID]),
+
+%%      {ok, _} = gun:await_up(WPID),
+%%      StreamRef = gun:ws_upgrade(WPID, "/ws", []),
+%%      {upgrade, [<<"websocket">>], _} = gun:await(WPID, StreamRef),
+
       connection(State#{wpid => WPID});
     {gun_up,WPID,_Proto} ->
       #{path := Path} = State,
@@ -80,10 +87,12 @@ connection(State) ->
   %-------- GUN EVENTS DONE ------
   %-------- Events From Balancer ------
     cstop ->
+      io:format("cstop~~~~n", []),
       #{socket := Socket} = State,
       gun:ws_send(Socket, {text, <<"@stop">>}),
       connection(State);
     stop ->
+      io:format("Stop~~~~n", []),
       #{wpid := WPID} = State,
       gun:flush(WPID),
       gun:shutdown(WPID);
