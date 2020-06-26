@@ -186,8 +186,10 @@ auth(Identity, Password) when is_list(Identity), is_list(Password) ->
   ok = mnesia:wait_for_tables([tab_player_info], ?WAIT_TABLE),
   case mnesia:dirty_index_read(tab_player_info, Identity, identity) of
     [Info] ->
+      lager:info("info: ~p~n", [Info]),
       auth(Info, Password);
     _ ->
+      lager:info("aaaaaaaaaaa~n"),
       {ok, unauth}
   end;
 

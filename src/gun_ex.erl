@@ -1,7 +1,7 @@
 %---- Cowboy Gun Websocket Implementation Without Behaviours ----
 -module(gun_ex).
 -compile([export_all,nowarn_export_all]).
-%%-include("proto_pb.hrl").
+-include("openpoker.hrl").
 -export([
   wc/0,
   connection/1
@@ -88,6 +88,12 @@ connection(State) ->
       #{wpid := WPID} = State,
       gun:flush(WPID),
       gun:shutdown(WPID);
+    login ->
+      #{socket := Socket} = State,
+      R = #cmd_login{identity = <<"jack">>, password = <<"def_pwd">>},
+      Bin = base64:encode(list_to_binary(protocol:write(R))),
+      gun:ws_send(Socket, {binary, Bin});
+
 %%    pt_10000 ->
 %%      Cmd = 10000,
 %%      RecordData = #pt_10000_c2s{user_id = 1},
