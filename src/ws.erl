@@ -9,16 +9,31 @@
 
 -include("openpoker.hrl").
 
-init(Req, Opts) ->
+init(Req, _) ->
 	State = #{connection_timer => ?UNDEF, player => ?UNDEF, player_info => ?UNDEF},
-	{cowboy_websocket, Req, State, Opts}.
+	{cowboy_websocket, Req, State}.
 
 websocket_init(State) ->
 	Pid = self(),
 	Timer = erlang:start_timer(?CONNECT_TIMEOUT, Pid, ?MODULE),
 	NewState = State#{connection_timer => Timer},
 	lager:info("My Pid is ~p ", [Pid]),
-	{ok, NewState, hibernate}.
+	{ok, NewState}.
+
+websocket_handle({text, <<"@stop">>}, State) ->
+	Pid = self(),
+	lager:info("wwwwwww @stop: ~p wwwwwwwWsPid: ~p ~n", [<<"@stop">>, Pid]),
+	{stop, State};
+
+websocket_handle({text, <<"close">>}, State) ->
+	Pid = self(),
+	lager:info("wwwwwww close: ~p wwwwwwwWsPid: ~p ~n", [<<"@stop">>, Pid]),
+	{stop, State};
+
+websocket_handle({text, Req}, State) ->
+	lager:info("text recevie: ~p wwwwwww ~n", [Req]),
+	Resp = Req,
+	{reply, {text, Resp}, State};
 
 websocket_handle({text, Msg}, State) ->
 	if
@@ -27,31 +42,31 @@ websocket_handle({text, Msg}, State) ->
 		true ->
 			ok
 	end,
-	{reply, {text, << "That's what she said! ", Msg/binary >>}, State, hibernate};
+	{reply, {text, << "That's what she said! ", Msg/binary >>}, State};
 
 websocket_handle({binary, Msg}, State) ->
 	NewState = handle_data(Msg, State),
-	{ok, NewState, hibernate};
+	{ok, NewState};
 
 websocket_handle(_Data, State) ->
-	{ok, State, hibernate}.
+	{ok, State}.
 
 websocket_info({send, Resp}, State) ->
-	{reply, {binary, Resp}, State, hibernate};
+	{reply, {binary, Resp}, State};
 
 websocket_info({timeout, _Ref, Msg}, State) ->
 	erlang:start_timer(1000, self(), <<"How' you doin'?">>),
-	{reply, {text, Msg}, State, hibernate};
+	{reply, {text, Msg}, State};
 
 websocket_info({close, _}, State) ->
 	self() ! {text, <<"Ready to logout">>},
 	{reply, {close, <<"some-reason">>}, State}.
 
 terminate(_Reason, _Req, #{player := Player}=State)->
-	disconnect(Player),
+%%	disconnect(Player),
 	Pid = self(),
 	lager:info("pid: ~p is logout", [Pid]),
-	{ok, State, hibernate}.
+	{ok, State}.
 
 disconnect(Player) when is_pid(Player) ->
 	player:phantom(Player),
@@ -130,7 +145,7 @@ handle_protocol(R, LoopData) ->
 %%send(R) -> send(self(), R).
 
 send(R) ->
-	%io:format("~n===============================~n~p~n", [R]),
+	lager:info("~n===============================~n~p~n", [R]),
 	case catch protocol:write(R) of
 		{'EXIT', Raise} ->
 			error_logger:error_report({protocol, write, R, Raise});

@@ -1,15 +1,16 @@
 {application, openpoker,
  [
-  {description, ""},
+  {description, "Poker server"},
   {vsn, "0.1.0"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib,
                   sasl,
-                  mnesia
-%%                  cowboy,
-%%                  lager
+                  mnesia,
+                  gun,
+                  cowboy,
+                  lager
                  ]},
   {mod, { openpoker_app, [cowboy, lager]}},
   {env, [

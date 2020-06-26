@@ -9,7 +9,7 @@
 
 %%websocket 客户端测试
 wc()->
-  Pid = spawn(gun_ex,connection,[#{host => "127.0.0.1",port => 5555,path => "/ws"}]),
+  Pid = spawn(gun_ex,connection,[#{host => "127.0.0.1",port => 3009,path => "/ws"}]),
   Pid ! start,
   Pid.
 
@@ -17,6 +17,7 @@ connection(State) ->
   receive
     start ->
       #{host := Host,port := Port} = State,
+      io:format("host: ~p port: ~p~n", [Host, Port]),
       %------- Connect To Host ----------
       {ok,WPID} = gun:open(Host,Port),
       io:format("Opening Gun: ~p~n",[WPID]),

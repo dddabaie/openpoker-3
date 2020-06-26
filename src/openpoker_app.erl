@@ -32,5 +32,6 @@ start(_StartType, _StartArgs) ->
 
 stop(_State) ->
   server_box:stop(),
+  application:stop(gun),
   io:format("<<<<<<<<<<<<<<<<<<<<<<<<<~n"),
   ok.
