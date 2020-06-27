@@ -8,11 +8,12 @@
                   stdlib,
                   sasl,
                   mnesia,
+                  %%    执行单元测试rebar3 eunit注释下面几行
                   gun,
                   cowboy,
                   lager
                  ]},
-  {mod, { openpoker_app, [cowboy, lager]}},
+  {mod, { openpoker_app, []}},
   {env, [
       {websocket_port, 3009},
       {server_port, 7777},
