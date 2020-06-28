@@ -95,28 +95,8 @@ connection(State) ->
       #{socket := Socket} = State,
       R = #cmd_login{identity = <<"jack">>, password = <<"def_pwd">>},
       Bin = base64:encode(list_to_binary(protocol:write(R))),
-      gun:ws_send(Socket, {binary, Bin});
-
-%%    pt_10000 ->
-%%      Cmd = 10000,
-%%      RecordData = #pt_10000_c2s{user_id = 1},
-%%      ProtocolModule = list_to_atom("pt_10_pb"),
-%%      io:format("Module: ~p~n", [ProtocolModule]),
-%%      Bin = ProtocolModule:encode_msg(RecordData),
-%%      BinRecordData = <<Cmd:32/little, Bin/binary>>,
-%%      #{socket := Socket} = State,
-%%      gun:ws_send(Socket, {binary, BinRecordData}),
-%%      connection(State);
-%%    pt_10001 ->
-%%      Cmd = 10001,
-%%      RecordData = #pt_10001_c2s{},
-%%      ProtocolModule = list_to_atom("pt_10_pb"),
-%%      io:format("Module: ~p~n", [ProtocolModule]),
-%%      Bin = ProtocolModule:encode_msg(RecordData),
-%%      BinRecordData2 = <<Cmd:32/little, Bin/binary>>,
-%%      #{socket := Socket} = State,
-%%      gun:ws_send(Socket, {binary, BinRecordData2}),
-%%      connection(State);
+      gun:ws_send(Socket, {binary, Bin}),
+      connection(State);
     Message ->
       io:format("Received Unknown Message on Gun: ~p~n",[Message]),
       connection(State)
