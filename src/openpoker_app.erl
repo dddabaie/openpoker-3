@@ -14,23 +14,44 @@ start(_StartType, _StartArgs) ->
   application:ensure_started(ranch),
   application:ensure_started(cowlib),
   application:ensure_started(cowboy),
+  application:ensure_started(gun),
   case mnesia:system_info(tables) of
     [schema] ->
       io:format("==============================================~n"),
-      io:format(" REBUILD CORE ...~n"),
+      io:format("REBUILD CORE ...~n"),
       schema:rebuild_schema(),
       schema:rebuild_core_and_data(),
       io:format("REBUILD CORE SUCCESSFUL~n");
     _ ->
       ok
   end,
-  io:format(">>>>>>>>>>>>>>>>>>>>>>>>>>~n"),
 
+  io:format(">>>>>>>>>>>>>>>>>>>>>>>>>>~n"),
   server_box:start_game_server(),
   op_sup:start_link().
 
-
 stop(_State) ->
   server_box:stop(),
+  application:stop(gun),
+  application:stop(lager),
   io:format("<<<<<<<<<<<<<<<<<<<<<<<<<~n"),
   ok.
+
+%% 执行rebar3 eunit 命令执行下面代码
+%%start(_StartType, _StartArgs) ->
+%%  case mnesia:system_info(tables) of
+%%    [schema] ->
+%%      io:format("==============================================~n"),
+%%      io:format(" REBUILD CORE ...~n"),
+%%      schema:rebuild_schema(),
+%%      schema:rebuild_core_and_data(),
+%%      io:format("REBUILD CORE SUCCESSFUL~n");
+%%    _ ->
+%%      ok
+%%  end,
+%%  io:format(">>>>>>>>>>>>>>>>>>>>>>>>>>~n"),
+%%  op_sup:start_link().
+%%
+%%stop(_State) ->
+%%  io:format("<<<<<<<<<<<<<<<<<<<<<<<<<~n"),
+%%  ok.

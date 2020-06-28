@@ -231,6 +231,11 @@ turnover_player_leave({Actor, Players}, {Call, Min, Max}) ->
 setup() ->
   error_logger:tty(false),
   application:start(sasl),
+  application:ensure_started(ranch),
+  application:ensure_started(cowlib),
+  application:ensure_started(cowboy),
+  application:ensure_all_started(gun),
+  application:start(lager),
   setup_schema(),
   ?assertMatch(ok, application:start(openpoker)),
   setup_players(?PLAYERS),

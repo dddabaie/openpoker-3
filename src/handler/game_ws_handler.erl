@@ -55,11 +55,11 @@ websocket_handle(_Frame, State) ->
     {ok, State}.
 
 websocket_info({send_binary, Resp}, State) ->
-%%    game_debug:debug(error, "binary Data: ~p~n", [Resp]),
+    io:format("binary Data: ~p~n", [Resp]),
     {reply, {binary, Resp}, State};
 
 websocket_info(_Info, #{ws_pid := WsPid} = State) ->
-%%    game_debug:debug(info,"Wwwwwwww WsPid: ~p, websocket unkown info  wwwwwww ~n", [WsPid]),
+    io:format("Wwwwwwww WsPid: ~p, websocket unkown info  wwwwwww ~n", [WsPid]),
     {reply, {text, <<"unkown info !">>}, State}.
 
 terminate(_Info, _Req, #{ws_pid := WsPid, user_pid := UserPid, logined := IsLogined
