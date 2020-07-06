@@ -7,7 +7,7 @@
 %%% Created : 09. 2月 2020 2:18 下午
 %%%-------------------------------------------------------------------
 -module(server_box).
--author("lunay").
+-author("Lunay").
 
 %% API
 -export([start_game_server/0, stop/0]).

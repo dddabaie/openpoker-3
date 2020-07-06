@@ -1,4 +1,5 @@
 -include_lib("eunit/include/eunit.hrl").
+%%-include("openpoker.hrl").
 
 -define(GAME, 1).
 -define(GAME_NAME(Game), {global, {game, Game}}).

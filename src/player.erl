@@ -1,17 +1,11 @@
 -module(player).
 -behaviour(gen_server).
-
 -export([init/1, handle_call/3, handle_cast/2, 
          handle_info/2, terminate/2, code_change/3]).
-
 -export([start/1, start_link/1, notify/2, cast/2, auth/2, logout/1]).
-
 -export([client/1, info/1, balance/1]).
-
 -export([ctx/1, ctx/2]).
-
 -export([fold/2, leave/2, phantom/1]).
-
 -include("openpoker.hrl").
 
 -record(pd, { %% process data
@@ -189,7 +183,6 @@ auth(Identity, Password) when is_list(Identity), is_list(Password) ->
       lager:info("info: ~p~n", [Info]),
       auth(Info, Password);
     _ ->
-      lager:info("aaaaaaaaaaa~n"),
       {ok, unauth}
   end;
 

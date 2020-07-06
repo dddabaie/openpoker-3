@@ -1,5 +1,4 @@
 -module(ws).
-
 -export([init/2]).
 -export([websocket_init/1]).
 -export([websocket_handle/2]).
@@ -51,6 +50,9 @@ websocket_handle({binary, Msg}, State) ->
 websocket_handle(_Data, State) ->
 	{ok, State}.
 
+websocket_info(close, State) ->
+	{stop, State};
+
 websocket_info({send, Resp}, State) ->
 	{reply, {binary, Resp}, State};
 
@@ -63,7 +65,11 @@ websocket_info({timeout, _, ?MODULE}, State) ->
 
 websocket_info({close, _}, State) ->
 	self() ! {text, <<"Ready to logout">>},
-	{reply, {close, <<"some-reason">>}, State}.
+	{reply, {close, <<"some-reason">>}, State};
+
+websocket_info(Data, State) ->
+	io:format("websocket_info_end: ~p~n", [Data]),
+	{ok, State}.
 
 terminate(_Reason, _Req, #{player := Player}=State)->
 	lager:info("State: ~p", [State]),
@@ -77,7 +83,7 @@ terminate(_Reason, _Req, #{player := Player}=State)->
 %%	ok.
 
 disconnect(Player)->
-	lager:error("xxxxyyyyyy"),
+	lager:error("disconnect~n"),
 	Ret = case Player of
 		undefind ->
 			ok;
@@ -121,12 +127,15 @@ handle_protocol(#cmd_login{identity = Identity, password = Password}, LoopData) 
 	lager:info("identity: ~p passwrd: ~p", [Identity, Password]),
 	case player:auth(binary_to_list(Identity), binary_to_list(Password)) of
 		{ok, unauth} ->
+			lager:info("1111111~n", []),
 			send(#notify_error{error = ?ERR_UNAUTH}),
 			close();
 		{ok, player_disable} ->
+			lager:info("22222~n", []),
 			send(#notify_error{error = ?ERR_PLAYER_DISABLE}),
 			close();
 		{ok, pass, Info} ->
+			lager:info("33333~n", []),
 			% create player process by client process,
 			% receive {'EXIT'} when player process error
 			case op_players_sup:start_child(Info) of

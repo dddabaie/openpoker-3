@@ -2,6 +2,7 @@
 -module(gun_ex).
 -compile([export_all,nowarn_export_all]).
 -include("openpoker.hrl").
+-include("openpoker_test.hrl").
 -export([
   wc/0,
   connection/1
@@ -67,14 +68,15 @@ connection(State) ->
         {text,TextData} ->
           io:format("Received Text Frame: ~p~n",[TextData]);
         {binary, BinData} ->
-          <<Cmd:32/little, Bin/binary>> = BinData,
-          [H1, H2, _, _, _] = integer_to_list(Cmd),
-          %%处理器模块
-          ProtocolModule = list_to_atom("pt_"++[H1, H2]++"_pb"),
-          RecordName = list_to_atom("pt_"++integer_to_list(Cmd) ++ "_s2c"),
-          RecordData = ProtocolModule:decode_msg(Bin, RecordName),
-          io:format("Received RecordData: ~p Cmd: ~p~n",[RecordData, Cmd]),
-          io:format("Received Binary Frame: ~p~n",[BinData]);
+%%          <<Cmd:32/little, Bin/binary>> = BinData,
+%%          [H1, H2, _, _, _] = integer_to_list(Cmd),
+%%          %%处理器模块
+%%          ProtocolModule = list_to_atom("pt_"++[H1, H2]++"_pb"),
+%%          RecordName = list_to_atom("pt_"++integer_to_list(Cmd) ++ "_s2c"),
+%%          RecordData = ProtocolModule:decode_msg(Bin, RecordName),
+%%          io:format("Received RecordData: ~p Cmd: ~p~n",[RecordData, Cmd]),
+%%          io:format("Received Binary Frame: ~p~n",[BinData]);
+          io:format("~p~n", [BinData]);
         _ ->
           io:format("Received Unhandled Frame: ~p~n",[Frame])
       end,
@@ -92,9 +94,27 @@ connection(State) ->
       gun:flush(WPID),
       gun:shutdown(WPID);
     login ->
+      io:format("login login ~~~~n", []),
       #{socket := Socket} = State,
       R = #cmd_login{identity = <<"jack">>, password = <<"def_pwd">>},
       Bin = base64:encode(list_to_binary(protocol:write(R))),
+      io:format("~p~n", [Bin]),
+      gun:ws_send(Socket, {binary, Bin}),
+      connection(State);
+    login2 ->
+      io:format("login2 login2 ~~~~n", []),
+      #{socket := Socket} = State,
+      R = #cmd_login{identity = <<"unknown">>, password = <<?DEF_PWD>>},
+      Bin = base64:encode(list_to_binary(protocol:write(R))),
+      io:format("~p~n", [Bin]),
+      gun:ws_send(Socket, {binary, Bin}),
+      connection(State);
+    login3 ->
+      io:format("login3 login3~~~n", []),
+      #{socket := Socket} = State,
+      R = #cmd_login{identity = <<"jack">>, password = ?DEF_HASH_PWD},
+      Bin = base64:encode(list_to_binary(protocol:write(R))),
+      io:format("~p~n", [Bin]),
       gun:ws_send(Socket, {binary, Bin}),
       connection(State);
     Message ->

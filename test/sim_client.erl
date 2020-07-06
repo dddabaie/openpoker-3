@@ -66,7 +66,6 @@ box(Id) ->
   box().
 
 %% tools function
-
 player(Identity, Players) when is_atom(Identity) ->
   proplists:get_value(Identity, Players).
 
